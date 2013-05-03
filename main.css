@@ -1,10 +1,32 @@
 ﻿body {
 }
 
+.clearfix:after {
+  content: "";
+  display: block;
+  clear: both;
+}
 #gameField {
     border: 1px solid black;
 }
 
-#apple, #stone, #snake {
+/*#apple, #stone, #snake {
     display: none;
+}*/
+
+asside {
+    float: right;
+    width: 250px;
+    margin-left: 15px;
 }
+
+canvas {
+    float: left;
+    margin-right: 20px;
+}
+
+table {
+    width: 250px;
+    border: 1px solid black;
+}
+

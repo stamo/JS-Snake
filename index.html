@@ -15,10 +15,37 @@
     <button onclick="engine.StartGame()">Start</button>
     <strong>Lives: </strong><span id="lives"></span> 
     <strong>Points: </strong><span id="points"></span>
-    <canvas id="gameField"></canvas>
-    <img id="apple" src="apple.jpg" width="20" height="20" alt="apple" />
-    <img id="stone" src="stone.png" width="20" height="20" alt="stone" />
-    <img id="snake" src="snake.png" width="20" height="20" alt="snake" />
+    <section class="clearfix">
+        <canvas id="gameField"></canvas>
+        <aside id="legend">
+            <p>
+                <img id="snake" src="snake.png" width="20" height="20" alt="snake" /> A picture of you...<br />
+                <img id="apple" src="apple.jpg" width="20" height="20" alt="apple" /> Food! Eat to grow<br />
+                <img id="stone" src="stone.png" width="20" height="20" alt="stone" /> Stones... Ouch!!! <br />
+            </p>
+            <p>
+                Use arrows keys to control the snake. Press "Q" to quit or "P" to put the game on pause. 
+            </p>
+            <p>
+                <strong>Press button Start to start the game </strong>
+            </p>
+            <strong>Hiscore table</strong>
+            <table>
+                <thead>
+                    <th>Place</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </aside>
+    </section>
     <script src="GameEngine.js"></script>
 </body>
 </html>
