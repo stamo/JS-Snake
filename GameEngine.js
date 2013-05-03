@@ -61,12 +61,13 @@
     // GameObject definition
     // This is the base class of the game. All objects in the game are Game Objects. 
     // It provides the constructor for game objects, as well as some useful methods to manipulate them
-    function GameObject(positionX, positionY, canBeEaten) {
+    function GameObject(positionX, positionY, canBeEaten, icon) {
         this.size = ObjectSize;
         this.position = {
             X: positionX,
             Y: positionY
         }
+        this.icon = icon;
         this.isDestroyed = false;
         this.canBeEaten = canBeEaten;
     }
@@ -87,13 +88,17 @@
     GameObject.prototype.draw = function () {
         gameField.ctx.fillStyle = this.color;
         gameField.ctx.moveTo(this.position.X, this.position.Y);
-        gameField.ctx.fillRect(this.position.X, this.position.Y, ObjectSize.WIDTH, ObjectSize.HEIGHT);
+        if (this.icon) {
+            gameField.ctx.drawImage(this.icon, this.position.X, this.position.Y);
+        } else {
+            gameField.ctx.fillRect(this.position.X, this.position.Y, ObjectSize.WIDTH, ObjectSize.HEIGHT);
+        }
     }
 
     //Food definition
     //This class represents Food objects in the game. It inherites GameObject
     function Food(x, y) {
-        GameObject.call(this, x, y, true);
+        GameObject.call(this, x, y, true, document.querySelector("#apple"));
         this.color = "red";
     }
 
@@ -111,22 +116,19 @@
     //Specific draw method, used to draw food with different shape than other objects.
     //We have to adjust the coordinates to fit the grid, because rectangle objects are specified by left top corner 
     //and circle object is specified by it's centre
-    Food.prototype.draw = function () {
-        var radius = ObjectSize.WIDTH / 2,
-            img = document.querySelector("#apple");
-        gameField.ctx.beginPath();
-        gameField.ctx.fillStyle = this.color;
-        gameField.ctx.moveTo(this.position.X + radius, this.position.Y + radius);
-        gameField.ctx.drawImage(img, this.position.X, this.position.Y);
-        //gameField.ctx.arc(this.position.X + radius, this.position.Y + radius, radius, 0, 2 * Math.PI)
-        //gameField.ctx.fillRect(this.position.X, this.position.Y, ObjectSize.WIDTH, ObjectSize.HEIGHT);
-        gameField.ctx.fill();
-    }
+    //Food.prototype.draw = function () {
+    //    var radius = ObjectSize.WIDTH / 2;
+    //    gameField.ctx.beginPath();
+    //    gameField.ctx.fillStyle = this.color;
+    //    gameField.ctx.moveTo(this.position.X + radius, this.position.Y + radius);
+    //    gameField.ctx.arc(this.position.X + radius, this.position.Y + radius, radius, 0, 2 * Math.PI)
+    //    gameField.ctx.fill();
+    //}
 
     //Stones definition
     //This class represents stones which the snake must avoid
     function Stone(x, y) {
-        GameObject.call(this, x, y, false);
+        GameObject.call(this, x, y, false, document.querySelector("#stone"));
         this.color = "grey";
     }
 
@@ -135,13 +137,6 @@
     //Stones don't need update, but each object must have update method
     Stone.prototype.update = function () {
         
-    }
-
-    Stone.prototype.draw = function () {
-        var img = document.querySelector("#stone");
-        gameField.ctx.fillStyle = this.color;
-        gameField.ctx.moveTo(this.position.X, this.position.Y);
-        gameField.ctx.drawImage(img, this.position.X, this.position.Y);
     }
 
     //Snake definition
@@ -155,7 +150,7 @@
 
     //This class represents the snake itself
     function Snake(x, y, length, direction) {
-        GameObject.call(this, x, y, false);
+        GameObject.call(this, x, y, false, document.querySelector("#snake"));
         // Here wi can specify number of lives the snake has
         this.lives = 5;
         // Snake has the ability to graw, so this field is not constant
@@ -278,13 +273,15 @@
 
     //This method draws the snake, including all it's body parts and some statistics
     Snake.prototype.draw = function () {
-        var i = 0,
-            img = document.querySelector("#snake");
+        var i = 0;
         //draws the head
         gameField.ctx.fillStyle = this.color;
         gameField.ctx.moveTo(this.position.X, this.position.Y);
-        //gameField.ctx.fillRect(this.position.X, this.position.Y, ObjectSize.WIDTH, ObjectSize.HEIGHT);
-        gameField.ctx.drawImage(img, this.position.X, this.position.Y);
+        if (this.icon) {
+            gameField.ctx.drawImage(this.icon, this.position.X, this.position.Y);
+        } else {
+            gameField.ctx.fillRect(this.position.X, this.position.Y, ObjectSize.WIDTH, ObjectSize.HEIGHT);
+        }
         //draws all body parts
         for (i = 0; i < this.length; i++) {
             gameField.ctx.fillStyle = this.bodyArray[i].color;
