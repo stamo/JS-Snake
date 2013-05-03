@@ -4,3 +4,7 @@
 #gameField {
     border: 1px solid black;
 }
+
+#apple, #stone, #snake {
+    display: none;
+}

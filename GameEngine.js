@@ -112,11 +112,13 @@
     //We have to adjust the coordinates to fit the grid, because rectangle objects are specified by left top corner 
     //and circle object is specified by it's centre
     Food.prototype.draw = function () {
-        var radius = ObjectSize.WIDTH / 2;
+        var radius = ObjectSize.WIDTH / 2,
+            img = document.querySelector("#apple");
         gameField.ctx.beginPath();
         gameField.ctx.fillStyle = this.color;
-        gameField.ctx.moveTo(this.position.X + radius, this.position.Y+ radius);
-        gameField.ctx.arc(this.position.X + radius, this.position.Y + radius, radius, 0, 2 * Math.PI)
+        gameField.ctx.moveTo(this.position.X + radius, this.position.Y + radius);
+        gameField.ctx.drawImage(img, this.position.X, this.position.Y);
+        //gameField.ctx.arc(this.position.X + radius, this.position.Y + radius, radius, 0, 2 * Math.PI)
         //gameField.ctx.fillRect(this.position.X, this.position.Y, ObjectSize.WIDTH, ObjectSize.HEIGHT);
         gameField.ctx.fill();
     }
@@ -133,6 +135,13 @@
     //Stones don't need update, but each object must have update method
     Stone.prototype.update = function () {
         
+    }
+
+    Stone.prototype.draw = function () {
+        var img = document.querySelector("#stone");
+        gameField.ctx.fillStyle = this.color;
+        gameField.ctx.moveTo(this.position.X, this.position.Y);
+        gameField.ctx.drawImage(img, this.position.X, this.position.Y);
     }
 
     //Snake definition
@@ -269,11 +278,13 @@
 
     //This method draws the snake, including all it's body parts and some statistics
     Snake.prototype.draw = function () {
-        var i = 0;
+        var i = 0,
+            img = document.querySelector("#snake");
         //draws the head
         gameField.ctx.fillStyle = this.color;
         gameField.ctx.moveTo(this.position.X, this.position.Y);
-        gameField.ctx.fillRect(this.position.X, this.position.Y, ObjectSize.WIDTH, ObjectSize.HEIGHT);
+        //gameField.ctx.fillRect(this.position.X, this.position.Y, ObjectSize.WIDTH, ObjectSize.HEIGHT);
+        gameField.ctx.drawImage(img, this.position.X, this.position.Y);
         //draws all body parts
         for (i = 0; i < this.length; i++) {
             gameField.ctx.fillStyle = this.bodyArray[i].color;
@@ -300,7 +311,7 @@
     //This method returns true if the snake leaves the gamefield
     Snake.prototype.isOutOfGameField = function () {
         var result = false;
-        if (this.position.X < 0 || this.position.X > gameField.size.WIDTH || this.position.Y < 0 || this.position.Y> gameField.size.HEIGHT) {
+        if (this.position.X < 0 || this.position.X > gameField.size.WIDTH || this.position.Y < 0 || this.position.Y > gameField.size.HEIGHT) {
             result = true;
         }
         return result;
