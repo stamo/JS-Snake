@@ -4,6 +4,7 @@
         gameObjects = [],
         intervalId = 0,
         snake = null,
+        hiscore = null,
         //Enumerations to be used in the game. 
         //The snake is controled by changeDirection method and a direction as a parameter.  
         Directions = Object.freeze({
@@ -368,6 +369,7 @@
         gameField.draw();
         //calls update method each 100 miliseconds (this parameter controls the game speed)
         //with this code it is possible to implement increasing game speed
+        loadHiscoreTable();
         intervalId = setInterval(update, 100);
     }
 
@@ -381,12 +383,12 @@
     function update() {
         var i = 0;
 
-        // calls collisionDetect to handle collisions, than calls update methods of all game objects to update their states
-        collisionDetect();
         // calls update methods of all game objects
         for (i = 0; i < gameObjects.length; i++) {
             gameObjects[i].update();
         }
+        // calls collisionDetect to handle collisions, than calls update methods of all game objects to update their states
+        collisionDetect();
         // redraws gamefield
         gameField.draw();
     }
@@ -470,6 +472,25 @@
                 break;
             default:
         }
+    }
+
+    function loadHiscoreTable() {
+        if (localStorage.snakeHiscore) {
+            hiscore = JSON.parse(localStorage.snakeHiscore);
+        } else {
+            hiscore = {
+                topFive: [{ position: 1, name: "John Dole", points: 0 },
+                    { position: 2, name: "John Dole", points: 0 },
+                    { position: 3, name: "John Dole", points: 0 },
+                    { position: 4, name: "John Dole", points: 0 },
+                    { position: 5, name: "John Dole", points: 0 }]
+            };
+            saveHiscoreTable(hiscore);
+        }
+    }
+
+    function saveHiscoreTable(hiscoreTable) {
+        localStorage.snakeHiscore = JSON.stringify(hiscoreTable);
     }
 
     //Exposes public methods
