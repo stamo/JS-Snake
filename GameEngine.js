@@ -571,7 +571,6 @@
 
     //Exposes public methods
     return {
-        hiscore: hiscore,
         StartGame: StartGame
     }
 
