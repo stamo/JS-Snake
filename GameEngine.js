@@ -380,11 +380,17 @@
         intervalId = setInterval(update, 100);
     }
 
+    //This method stops the updating of gamefield and waits for final updates.
+    //Then loads afterEndGameEvents method
     function endGame() {
         clearInterval(intervalId);
         setTimeout(afterEndGameEvents, 100);
     }
 
+    //This method is called after the end of the game.
+    //It clears the gamefield and shows a "Game Over" sign. 
+    //I've tried to put this in endGame, but there was an isue with final updates, so I had to move it here.
+    //Then manages high score table update
     function afterEndGameEvents()
     {
         var minScore = hiscore.topFive.pop(),
@@ -505,6 +511,7 @@
         }
     }
 
+    // This method loads the High Score table from local starage or creates it if it doesn't exist.
     function loadHiscoreTable() {
         var i = 0,
             hiscoreHTML = "",
@@ -530,6 +537,7 @@
         HtmlTable.innerHTML = hiscoreHTML;
     }
 
+    //Saving High Scores to local storage
     function saveHiscoreTable() {
         localStorage.snakeHiscore = JSON.stringify(hiscore);
     }
