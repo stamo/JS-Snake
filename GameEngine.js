@@ -505,18 +505,19 @@
             y = event.accelerationIncludingGravity.y,
             deltaX = Math.abs(x - deviceMotion.x),
             deltaY = Math.abs(y - deviceMotion.y);
-
-        if (deltaX > deltaY) {
-            if (x > deviceMotion.x) {
-                snake.changeDirection(Directions.LEFT);
+        if (deltaX > 10 || deltaY > 10) {
+            if (deltaX > deltaY) {
+                if (x > deviceMotion.x) {
+                    snake.changeDirection(Directions.LEFT);
+                } else {
+                    snake.changeDirection(Directions.RIGHT);
+                }
             } else {
-                snake.changeDirection(Directions.RIGHT);
-            }
-        } else {
-            if (y > deviceMotion.y) {
-                snake.changeDirection(Directions.DOWN);
-            } else {
-                snake.changeDirection(Directions.UP);
+                if (y > deviceMotion.y) {
+                    snake.changeDirection(Directions.DOWN);
+                } else {
+                    snake.changeDirection(Directions.UP);
+                }
             }
         }
     }
