@@ -17,7 +17,12 @@
         ObjectSize = Object.freeze({
             WIDTH: 20,
             HEIGHT: 20
-        });
+        }),
+        deviceMotion = {
+            x: 0,
+            y: 0
+        };
+
         
     // JS OOP Helper start
     Function.prototype.inherit = function (parent) {
@@ -365,6 +370,7 @@
 
         // attach event to the body element, listen to "keydown" event and call the getKey event handler
         document.getElementsByTagName("body")[0].addEventListener("keydown", getKey, false);
+        window.addEventListener("devicemotion", handleMotionEvent, true);
         //draws the gamefield
         gameField.draw();
         //calls update method each 100 miliseconds (this parameter controls the game speed)
@@ -491,6 +497,28 @@
 
     function saveHiscoreTable(hiscoreTable) {
         localStorage.snakeHiscore = JSON.stringify(hiscoreTable);
+    }
+
+    function handleMotionEvent(event) {
+
+        var x = event.accelerationIncludingGravity.x,
+            y = event.accelerationIncludingGravity.y,
+            deltaX = Math.abs(x - deviceMotion.x),
+            deltaY = Math.abs(y - deviceMotion.y);
+
+        if (deltaX > deltaY) {
+            if (x > deviceMotion.x) {
+                snake.changeDirection(Directions.LEFT);
+            } else {
+                snake.changeDirection(Directions.RIGHT);
+            }
+        } else {
+            if (y > deviceMotion.y) {
+                snake.changeDirection(Directions.DOWN);
+            } else {
+                snake.changeDirection(Directions.UP);
+            }
+        }
     }
 
     //Exposes public methods
