@@ -505,7 +505,7 @@
             y = event.accelerationIncludingGravity.y,
             deltaX = Math.abs(x - deviceMotion.x),
             deltaY = Math.abs(y - deviceMotion.y);
-        if (deltaX > 2 || deltaY > 2) {
+        if (deltaX > 1 || deltaY > 1) {
             if (deltaX > deltaY) {
                 if (x > deviceMotion.x) {
                     snake.changeDirection(Directions.LEFT);
