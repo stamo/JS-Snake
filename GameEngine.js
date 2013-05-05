@@ -23,6 +23,8 @@
             y: 0
         };
 
+    //Loading Hi score table from localStorage
+    loadHiscoreTable();
         
     // JS OOP Helper start
     Function.prototype.inherit = function (parent) {
@@ -375,14 +377,37 @@
         gameField.draw();
         //calls update method each 100 miliseconds (this parameter controls the game speed)
         //with this code it is possible to implement increasing game speed
-        loadHiscoreTable();
         intervalId = setInterval(update, 100);
     }
 
-    //TODO: create hiscore table in the local storage and keep 5 top players
     function endGame() {
         clearInterval(intervalId);
-        //after game events
+        setTimeout(afterEndGameEvents, 100);
+    }
+
+    function afterEndGameEvents()
+    {
+        var minScore = hiscore.topFive.pop(),
+            hiscoreObject = {},
+            fontSize = 60;
+
+        gameField.ctx.clearRect(0, 0, gameField.size.WIDTH, gameField.size.HEIGHT);
+        gameField.ctx.font = fontSize + "px Arial";
+        gameField.ctx.textAlign = 'center';
+        gameField.ctx.fillStyle = "green";
+        gameField.ctx.fillText("Game Over", gameField.size.WIDTH / 2, gameField.size.HEIGHT / 2);
+        if (snake.totalFood > minScore.points) {
+            hiscoreObject.name = prompt("Congratulations!!! This is awesome result! Please, enter your name:");
+            hiscoreObject.points = snake.totalFood;
+            hiscore.topFive.push(hiscoreObject);
+            hiscore.topFive.sort(function (a, b) {
+                return b.points - a.points;
+            });
+            saveHiscoreTable();
+            loadHiscoreTable();
+        } else {
+            hiscore.topFive.push(minScore);
+        }
     }
 
     // This method is called each 100 miliseconds to update the states of all game objects
@@ -481,30 +506,44 @@
     }
 
     function loadHiscoreTable() {
+        var i = 0,
+            hiscoreHTML = "",
+            HtmlTable = document.querySelector("#hiscoreTable");
+
         if (localStorage.snakeHiscore) {
             hiscore = JSON.parse(localStorage.snakeHiscore);
         } else {
             hiscore = {
-                topFive: [{ position: 1, name: "John Dole", points: 0 },
-                    { position: 2, name: "John Dole", points: 0 },
-                    { position: 3, name: "John Dole", points: 0 },
-                    { position: 4, name: "John Dole", points: 0 },
-                    { position: 5, name: "John Dole", points: 0 }]
+                topFive: [{ name: "John Dole", points: 0 },
+                    { name: "John Dole", points: 0 },
+                    { name: "John Dole", points: 0 },
+                    { name: "John Dole", points: 0 },
+                    { name: "John Dole", points: 0 }]
             };
-            saveHiscoreTable(hiscore);
+            saveHiscoreTable();
         }
+        
+        for (i = 0; i < hiscore.topFive.length; i++) {
+            hiscoreHTML += '<tr><td>' + (i + 1) + '</td><td class="textCenter">' + hiscore.topFive[i].name + '</td><td class="textRight">' + hiscore.topFive[i].points + "</td></tr>"
+        }
+
+        HtmlTable.innerHTML = hiscoreHTML;
     }
 
-    function saveHiscoreTable(hiscoreTable) {
-        localStorage.snakeHiscore = JSON.stringify(hiscoreTable);
+    function saveHiscoreTable() {
+        localStorage.snakeHiscore = JSON.stringify(hiscore);
     }
 
+    //This implements snake control by accelerometer on mobile devices. 
+    //It handles devicemotion event. But unfortunately it is not verry precise. 
+    //TODO: try to make it better or implement touch control
     function handleMotionEvent(event) {
-
         var x = event.accelerationIncludingGravity.x,
             y = event.accelerationIncludingGravity.y,
             deltaX = Math.abs(x - deviceMotion.x),
             deltaY = Math.abs(y - deviceMotion.y);
+
+        //Next line makes it a little less sensible
         if (deltaX > 1 || deltaY > 1) {
             if (deltaX > deltaY) {
                 if (x > deviceMotion.x) {
@@ -524,6 +563,7 @@
 
     //Exposes public methods
     return {
+        hiscore: hiscore,
         StartGame: StartGame
     }
 
